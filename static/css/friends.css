@@ -1,0 +1,13 @@
+.friendList{
+    display: flex;
+    justify-content: center;
+}
+.friendLine{
+    vertical-align: top;
+}
+.row{
+    margin-bottom: 20px;
+}
+.container{
+    background-color: #FAFAFA;
+}

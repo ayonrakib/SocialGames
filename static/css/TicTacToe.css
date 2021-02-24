@@ -1,0 +1,23 @@
+/* kono kisur jonno special design hoile oitar jonno specific class banabo. generic class dile
+   sob gula element ei same design apply hobe, so kheyal rakhte hobe */
+
+body{
+    background-color: rgb(39, 206, 218);
+    padding-top: 50px;
+}
+#zerothBlock, #firstBlock, #secondBlock, #thirdBlock, #fourthBlock, #fifthBlock, #sixthBlock, #seventhBlock, #eighthBlock{
+    background-color: rgb(3, 187, 187);
+    text-align: center;
+    display: inline-block;
+    width: 150px;
+    height: 150px;
+    vertical-align: top;
+    font-size: 150px;
+}
+.makeOBigger, .makeXBigger{
+    font-size: 130px;
+    vertical-align: top;
+}
+.loginPic{
+    justify-content: center;
+}

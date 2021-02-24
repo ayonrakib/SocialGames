@@ -1,0 +1,24 @@
+{% include 'user/head.html' %}
+{% include 'user/bodyHeader.html' %}
+{% include 'user/loginFormHeader.html' %}
+{% include 'user/pageHeader.html' %}
+{% if  'User Found' in userFound %}
+    {% include 'user/emailFoundError.html' %}
+    {% include 'user/firstNameBlock.html' %}
+    {% include 'user/lastNameBlock.html' %}
+    {% include 'user/emailBlock.html' %}
+    {% include 'user/passwordBlock.html' %}
+    {% include 'user/button.html' %}
+    {% include 'user/returnToLogin.html' %}
+    {% include 'user/loginFormFooter.html' %}
+    {% include 'user/bodyFooter.html' %}
+{% elif '' in userFound %}
+    {% include 'user/firstNameBlock.html' %}
+    {% include 'user/lastNameBlock.html' %}
+    {% include 'user/emailBlock.html' %}
+    {% include 'user/passwordBlock.html' %}
+    {% include 'user/button.html' %}
+    {% include 'user/returnToLogin.html' %}
+    {% include 'user/loginFormFooter.html' %}
+    {% include 'user/bodyFooter.html' %}
+{% endif %}

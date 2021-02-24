@@ -1,0 +1,14 @@
+{   
+    "python.testing.cwd": "D:/PythonProgramming/SocialGames",
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./test",
+        "-p",
+        "test*.py"
+    ],
+    "python.testing.pytestEnabled": false,
+    "python.testing.nosetestsEnabled": false,
+    "python.testing.unittestEnabled": true,
+    "python.pythonPath": "D:\\anaconda\\python.exe"
+}
