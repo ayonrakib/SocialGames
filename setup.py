@@ -35,9 +35,9 @@ userController = UserController()
     # user5.save()
 
 # modifying table with columns
-role = enumerate(default=False)
-database = MySQLDatabase("socialgames",host = "localhost", user = "root", password = "Hahaha01670", port = 3306)
-migrator = MySQLMigrator(database)
+# role = UUIDField(default="player")
+# database = MySQLDatabase("socialgames",host = "localhost", user = "root", password = "Hahaha01670", port = 3306)
+# migrator = MySQLMigrator(database)
 
 # migrate(
 #     migrator.add_column('Friends','isBlocked', isBlocked)
@@ -55,6 +55,6 @@ migrator = MySQLMigrator(database)
 # existingRequest.status = "requested"
 # existingRequest.save()
 
-migrate(
-    migrator.add_column()
-)
+# migrate(
+#     migrator.add_column('User','role',role)
+# )
