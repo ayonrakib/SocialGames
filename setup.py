@@ -19,19 +19,19 @@ userController = UserController()
 # currentSession = str(os.urandom(20))
 
 # Adding users one by one:
-    # user1 = User.create(email = 'ayon@gmail.com', firstName = "Rakib", lastName = "Ayon", salt = salt, password = userController.hashPassword("password", salt), currentSession = "")
+    # user1 = User.create(email = 'ayon@gmail.com', firstName = "Rakib", lastName = "Ayon", salt = salt, password = userController.hashPassword("password", salt), currentSession = "", role = "player")
     # user1.save()
 
-    # user2 = User.create(email = 'eva@gmail.com', firstName = "Fahmida", lastName = "Mahjabin", salt = salt, password = userController.hashPassword("password", salt), currentSession = "")
+    # user2 = User.create(email = 'eva@gmail.com', firstName = "Fahmida", lastName = "Mahjabin", salt = salt, password = userController.hashPassword("password", salt), currentSession = "", role = "player")
     # user2.save()
 
-    # user3 = User.create(email = 'golam@gmail.com', firstName = "Golam", lastName = "Muktadir",salt = salt, password = userController.hashPassword("password", salt), currentSession = "")
+    # user3 = User.create(email = 'golam@gmail.com', firstName = "Golam", lastName = "Muktadir",salt = salt, password = userController.hashPassword("password", salt), currentSession = "", role = "player")
     # user3.save()
 
-    # user4 = User.create(email = 'saad@gmail.com', firstName = "Saad", lastName = "Manzur",salt = salt, password = userController.hashPassword("password", salt), currentSession = "")
+    # user4 = User.create(email = 'saad@gmail.com', firstName = "Saad", lastName = "Manzur",salt = salt, password = userController.hashPassword("password", salt), currentSession = "", role = "player")
     # user4.save()
 
-    # user5 = User.create(email = 'ayonrakib@gmail.com', firstName = "Rakib Hasan", lastName = "Ayon", salt = salt, password = userController.hashPassword("password", salt), currentSession = "")
+    # user5 = User.create(email = 'ayonrakib@gmail.com', firstName = "Rakib Hasan", lastName = "Ayon", salt = salt, password = userController.hashPassword("password", salt), currentSession = "", role = "player")
     # user5.save()
 
 # modifying table with columns
