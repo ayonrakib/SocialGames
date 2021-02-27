@@ -1,5 +1,5 @@
 {   
-    "python.testing.cwd": "D:/PythonProgramming/SocialGames",
+    "python.testing.cwd": "D:/SocialGames",
     "python.testing.unittestArgs": [
         "-v",
         "-s",

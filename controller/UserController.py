@@ -61,6 +61,22 @@ class UserController():
         return user.id
 
 
+    # getUserRole
+    # input: current user session id
+    # return: role from db
+    # method:
+    #   1. current user session id diye db theke user entry read korbo
+    #   2. jodi entry none na hoy:
+    #       1. return entry.role
+    #   3. entry khuje na paile return none
+    def getUserRole(self, currentSession):
+        try:
+            user = User.get(User.currentSession == currentSession)
+            return user.role
+        except peewee.DoesNotExist:
+            return None
+
+
     def createUserFromRegistrationForm(self, email, password, firstName, lastName):
         salt = str(os.urandom(20))
         currentSession = str(os.urandom(20))
@@ -392,3 +408,22 @@ class UserController():
         record.delete_instance()
         record.save()
         return True
+
+
+    # isMyRoleAdmin
+    # input: currentSession
+    # return: true if i am admin, false if not
+    # method:
+    #   1. db theke entry nibo jei user er currentSession input er soman
+    #   2. jodi entry er role admin hoy:
+    #       1. return true
+    #   3. return false
+    #   4. entry exist na korle return false return false
+    def isMyRoleAdmin(self, currentSession):
+        try:
+            user = User.get(User.currentSession == currentSession)
+            if user.role == "admin":
+                return True
+            return False
+        except peewee.DoesNotExist:
+            return False

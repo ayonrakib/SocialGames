@@ -9,7 +9,7 @@ from playhouse.migrate import *
 
 databaseConnection = DatabaseConnection.getConnection()
 userController = UserController()
-
+user = User()
 # userController.findUsersWithEmail('ayo')
 
 # jokhon table banabo, create_tables function er input hobe list of Class objects
@@ -35,7 +35,7 @@ userController = UserController()
     # user5.save()
 
 # modifying table with columns
-# role = UUIDField(default="player")
+# role = CharField(default="player")
 # database = MySQLDatabase("socialgames",host = "localhost", user = "root", password = "Hahaha01670", port = 3306)
 # migrator = MySQLMigrator(database)
 

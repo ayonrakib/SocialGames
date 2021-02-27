@@ -9,6 +9,7 @@ class User(peewee.Model):
     lastName = peewee.CharField()
     currentSession = peewee.CharField()
     salt = peewee.CharField()
+    role = peewee.CharField()
     class Meta:
         database = DatabaseConnection.getConnection()
 
@@ -62,3 +63,11 @@ class User(peewee.Model):
 
     def getLastName(self):
         return self.lastName
+
+
+    def getRole(self):
+        return self.role
+
+
+    def setRole(self, role):
+        self.role = role

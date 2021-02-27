@@ -69,6 +69,9 @@ def userRegistration():
 @app.route('/validate-registration', methods = ['POST','GET'])
 def registrationSuccessful():
     if request.method == 'POST':
+        currentSession = request.cookies.get('currentSession')
+        if currentSession is None:
+            return redirect(url_for('logIn'))
         email = request.form['email']
         password = request.form['password']
         firstName = request.form['firstName']
@@ -120,19 +123,42 @@ def authenticate():
 
 @app.route('/home-page')
 def homePage():
-    return render_template('commons/home-page.html')
+    currentSession = request.cookies.get('currentSession')
+    if currentSession is None:
+            return redirect(url_for('logIn'))
+    return render_template('commons/home-page.html',
+                            role = userController.getUserRole(currentSession))
 
 
 @app.route('/friends', methods = ['GET'])
 def friends():
+    currentSession = request.cookies.get('currentSession')
+    if currentSession is None:
+            return redirect(url_for('logIn'))
     if request.method == 'GET':
         name = request.form.get('friendName')
-        return render_template('friends/page.html')
+        currentSession = request.cookies.get('currentSession')
+        return render_template('friends/page.html',
+                                role = userController.getUserRole(currentSession))
 
+
+@app.route('/admin')
+def adminPanel():
+    currentSession = request.cookies.get('currentSession')
+    if currentSession is None:
+            return redirect(url_for('logIn'))
+    amIAdmin = userController.isMyRoleAdmin(currentSession)
+    if amIAdmin:
+        return render_template('admin/admin.html',
+                                role = userController.getUserRole(currentSession))
+    return redirect(url_for('homePage'))
+                            
 
 @app.route('/get-current-user')
 def getCurrentUser():
     currentSession = request.cookies.get('currentSession')
+    if currentSession is None:
+            return redirect(url_for('logIn'))
     currentUser = userController.getUser(currentSession)
     return currentUser.email
 
@@ -141,12 +167,16 @@ def getCurrentUser():
 def getFriends():
     email = request.args.get('email')
     currentSession = request.cookies.get('currentSession')
+    if currentSession is None:
+            return redirect(url_for('logIn'))
     return f"{userController.findUsersWithEmail(email, currentSession)}"
 
 
 @app.route('/get-pending-requests')
 def getPendingRequests():
     currentSession = request.cookies.get('currentSession')
+    if currentSession is None:
+            return redirect(url_for('logIn'))
     pendingRequests = userController.getPendingRequests(currentSession)
     return f"{pendingRequests}"
 
@@ -154,6 +184,8 @@ def getPendingRequests():
 @app.route('/get-my-friends')
 def getMyFriends():
     currentSession = request.cookies.get('currentSession')
+    if currentSession is None:
+            return redirect(url_for('logIn'))
     user_id = userController.getUserWithSessionId(currentSession)
     getMyFriends = userController.getMyFriends(user_id)
     return f"{getMyFriends}"
@@ -161,8 +193,10 @@ def getMyFriends():
 
 @app.route('/add-friend')
 def addFriends():
-    currentUser = request.cookies.get('currentSession')
-    user_id = userController.getUserWithSessionId(currentUser)
+    currentSession = request.cookies.get('currentSession')
+    if currentSession is None:
+            return redirect(url_for('logIn'))
+    user_id = userController.getUserWithSessionId(currentSession)
     friend_id = request.args.get('friend_id')
     print(user_id, friend_id)
     return f"{userController.addFriend(user_id, friend_id)}"
@@ -171,16 +205,20 @@ def addFriends():
 @app.route('/accept-friend')
 def acceptFrienRequest():
     friend_id = request.args.get('friend_id')
-    currentUser = request.cookies.get('currentSession')
-    user_id = userController.getUserWithSessionId(currentUser)
+    currentSession = request.cookies.get('currentSession')
+    if currentSession is None:
+        return redirect(url_for('logIn'))
+    user_id = userController.getUserWithSessionId(currentSession)
     return f"{userController.acceptFrienRequest(user_id, friend_id)}"
 
 
 @app.route('/remove-friend')
 def removefriends():
     userToBeRemoved = request.args.get('userToBeRemoved')
-    currentUser = request.cookies.get('currentSession')
-    user_id = userController.getUserWithSessionId(currentUser)
+    currentSession = request.cookies.get('currentSession')
+    if currentSession is None:
+        return redirect(url_for('logIn'))
+    user_id = userController.getUserWithSessionId(currentSession)
     return f"{userController.removefriend(user_id,userToBeRemoved)}"
     
 
@@ -191,8 +229,10 @@ def removefriends():
 # 4. return true
 @app.route('/block-friend')
 def blockFriend():
-    currentUser = request.cookies.get('currentSession')
-    user_id = userController.getUserWithSessionId(currentUser)
+    currentSession = request.cookies.get('currentSession')
+    if currentSession is None:
+        return redirect(url_for('logIn'))
+    user_id = userController.getUserWithSessionId(currentSession)
     friend_id = request.args.get('friend_id')
     userController.blockFriend(user_id, friend_id)
     return ""
@@ -200,11 +240,24 @@ def blockFriend():
 
 @app.route('/unblock-friend')
 def unblockFriend():
-    currentUser = request.cookies.get('currentSession')
-    user_id = userController.getUserWithSessionId(currentUser)
+    currentSession = request.cookies.get('currentSession')
+    if currentSession is None:
+        return redirect(url_for('logIn'))
+    user_id = userController.getUserWithSessionId(currentSession)
     friend_id = request.args.get('friend_id')
     userController.unblockFriend(user_id, friend_id)
     return ""
+
+
+@app.route('/create-game', methods = ['POST','GET'])
+def createGame():
+    if request.method == 'POST':
+        response = []
+        response.append(request.form['gameTitle'])
+        response.append(request.form['gameCode'])
+        response.append(request.form['numberOfPlayers'])
+        return response
+    return "Did not enter post method"
 
 
 @app.route('/logout')
