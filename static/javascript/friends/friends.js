@@ -55,7 +55,7 @@ $(document).ready(function(){
             url: 'get-my-friends',
             data: {}
         }).done(function(response){
-            console.log(response);
+            // console.log(response);
             var friendNumber = 1;
             var friendsBlock = rowBlockHeader(friendNumber) + columnHeader(3) + imageBlock() + columnFooter();
             var friends = "";
@@ -75,7 +75,7 @@ $(document).ready(function(){
             url: 'get-pending-requests',
             data: {}
         }).done(function(response){
-            console.log("pending requests",response);
+            // console.log("pending requests",response);
             var friendNumber = 1;
             var friendsBlock = rowBlockHeader(friendNumber) + columnHeader(2) + imageBlock() + columnFooter();
             var friends = "";

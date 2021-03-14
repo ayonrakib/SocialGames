@@ -1,4 +1,4 @@
-{% include 'user/head.html' %}
+{% include 'commons/head.html' %}
 {% include 'user/bodyHeader.html' %}
 {% include 'user/loginFormHeader.html' %}
 {% include 'user/pageHeader.html' %}
@@ -9,12 +9,12 @@
     {% include 'user/button.html' %}
     {% include 'user/newAccountDirectLink.html' %}
     {% include 'user/loginFormFooter.html' %}
-    {% include 'user/bodyFooter.html' %}
+    {% include 'commons/pageFooter.html' %}
 {% elif '' in errorMessage %}
     {% include 'user/emailBlock.html' %}
     {% include 'user/passwordBlock.html' %}
     {% include 'user/button.html' %}
     {% include 'user/newAccountDirectLink.html' %}
     {% include 'user/loginFormFooter.html' %}
-    {% include 'user/bodyFooter.html' %}
+    {% include 'commons/pageFooter.html' %}
 {% endif %}

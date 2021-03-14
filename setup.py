@@ -14,7 +14,7 @@ user = User()
 
 # jokhon table banabo, create_tables function er input hobe list of Class objects
 # databaseConnection.create_tables([User, Friends, GameTable, MatchTable])
-# databaseConnection.create_tables([Friend])
+databaseConnection.create_tables([GameTable])
 # salt = str(os.urandom(20))
 # currentSession = str(os.urandom(20))
 
@@ -57,4 +57,15 @@ user = User()
 
 # migrate(
 #     migrator.add_column('User','role',role)
+# )
+
+# gameTitle = CharField()
+# gameCode = IntegerField()
+# numberOfPlayers = IntegerField()
+# gameIcon = CharField()
+# database = MySQLDatabase("socialgames",host = "localhost", user = "root", password = "Hahaha01670", port = 3306)
+# migrator = MySQLMigrator(database)
+
+# migrate(
+#     migrator.add_column('GameTable','gameTitle',gameTitle)
 # )

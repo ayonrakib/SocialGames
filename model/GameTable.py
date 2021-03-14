@@ -10,8 +10,10 @@ from model.User import User
 # class GameTable
 class GameTable(peewee.Model):
     id = peewee.AutoField()
-    firstPlayer = peewee.ForeignKeyField(User, to_field = 'id')
-    secondPlayer = peewee.ForeignKeyField(User, to_field = 'id')
+    gameTitle = peewee.CharField()
+    gameCode = peewee.IntegerField()
+    numberOfPlayers = peewee.IntegerField()
+    gameIcon = peewee.CharField()
     class Meta:
         database = DatabaseConnection.getConnection()
 

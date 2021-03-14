@@ -1,27 +1,52 @@
 function selectGameBlock(){
     // console.log("creategame js is loaded");
 
-    gameForm = getContainer() + "<form>" + getRowHeader() + getColumnHeader() + "Game Title: " + getDivEnding() + getColumnHeader() + getInputText("gameTitle","Game Title") + getDivEnding() + getDivEnding()
+    gameForm = getContainer() + "<form id = 'createGameForm'>" + getRowHeader() + getColumnHeader() + "Game Title: " + getDivEnding() + getColumnHeader() + getInputText("gameTitle","Game Title") + getDivEnding() + getDivEnding()
              + getRowHeader() + getColumnHeader() + "Game Code: " + getDivEnding() + getColumnHeader() + getInputText("gameCode","Game Code") + getDivEnding() + getDivEnding()
              + getRowHeader() + getColumnHeader() + "Number of Players: " + getDivEnding() + getColumnHeader() + getInputText("numberOfPlayers","Number of Players") + getDivEnding() + getDivEnding()
              + getRowHeader() + getColumnHeader() + "Game Icon: " + getDivEnding() + getColumnHeader() + `<input type="file" id="gameIcon">` + getDivEnding() + getDivEnding()
              + getRowHeader() + getColumnHeader() + getDivEnding() + getColumnHeader() + getButton() + getDivEnding() + "</form>"  + getDivEnding() + getDivEnding();
     $("#gameBlock").html(gameForm);
-}
-
-function createNewGame(){
-    $( "form" ).submit(function( event ) {
-        gameFormData = $( this ).serializeArray();
-        // console.log(gameFormData);
-        event.preventDefault();
-        var gameIconName = $('#gameIcon').prop('files')[0]["name"];
-        console.log(gameIconName);
-        for(var index = 0; index < gameFormData.length; index++){
-            console.log(gameFormData[index]);
-        }
-      });
+    
+    $(document).ready(function(){
+        console.log($( "#createGameForm" ));
+        $( "#createGameForm" ).submit(function( event ) {
+            alert("The submit button has been clicked");
+            event.preventDefault();
+            console.log("form submit button has been clicked");
+            var gameFormData = $( this ).serializeArray();
+            // console.log(gameFormData);
+            var gameIconName = $('#gameIcon').prop('files')[0]["name"];
+            console.log(gameIconName);
+            var gameTitle = gameFormData[0]['value'];
+            var gameCode = gameFormData[1]['value'];
+            var numberOfPlayers = gameFormData[2]['value'];
+            console.log(gameTitle); 
+            console.log(gameCode);
+            console.log(numberOfPlayers);
+            $.ajax({
+                method: 'GET',
+                url: 'create-game',
+                data: {
+                    'gameTitle': gameTitle,
+                    'gameCode' : gameCode,
+                    'numberOfPlayers' : numberOfPlayers,
+                    'gameIcon' : gameIcon
+                }
+            }).done(function(response){
+                console.log(response);
+            })
+            return false;
+        })
+    })
     
 }
+
+// $(document).ready(function(){
+//     console.log($( "#createGameForm" ));
+// })
+
+
 
 function createGameBlock(gameName){
     console.log(gameName);
@@ -64,7 +89,7 @@ function getInputText(id, placeHolder){
 
 function getButton(){
     return `
-        <button type = "submit" id = "submitButton" onclick = "createNewGame()" class = "w-70 btn btn-sm btn-primary">
+        <button type = "submit" id = "submitButton" class = "w-70 btn btn-sm btn-primary">
             Create Game 
         </button>`;
 }

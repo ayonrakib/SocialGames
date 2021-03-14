@@ -249,15 +249,17 @@ def unblockFriend():
     return ""
 
 
-@app.route('/create-game', methods = ['POST','GET'])
+@app.route('/create-new-game', methods = ['GET','POST'])
 def createGame():
-    if request.method == 'POST':
+    if request.method == 'GET':
         response = []
-        response.append(request.form['gameTitle'])
-        response.append(request.form['gameCode'])
-        response.append(request.form['numberOfPlayers'])
-        return response
-    return "Did not enter post method"
+        print(request.args.get('gameTitle'))
+        response.append(request.args.get('gameTitle'))
+        response.append(request.args.get('gameCode'))
+        response.append(request.args.get('numberOfPlayers'))
+        response.append(request.args.get('gameIcon'))
+        
+        return f"{response}"
 
 
 @app.route('/logout')
@@ -268,6 +270,12 @@ def logOut():
     response.set_cookie('email', expires=0)
     response.set_cookie('currentSession', expires=0)
     return response
+
+
+@app.route('/get-request-header')
+def getRequestHeader():
+    authorizationToken = request.headers.get('Authorization')
+    return authorizationToken
 
 
 if __name__ == "__main__":
