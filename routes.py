@@ -52,7 +52,9 @@ def logIn():
                                 action = "authenticate", 
                                 pageHeader = "Sign In",
                                 errorMessage = "",
-                                buttonValue = "Sign In")
+                                buttonValue = "Sign In",
+                                buttonLength = "",
+                                buttonId = "loginSubmitButton")
     response = redirect(url_for('homePage'))
     return response
 
@@ -247,6 +249,29 @@ def unblockFriend():
     friend_id = request.args.get('friend_id')
     userController.unblockFriend(user_id, friend_id)
     return ""
+
+
+@app.route('/profile')
+def profile():
+    currentSession = request.cookies.get('currentSession')
+    userId = userController.getUserWithSessionId(currentSession)
+    try:
+        with open(f'images/profilePicture/{userId}.png') as f:
+            return render_template('profile/profile.html',
+                                    id = userId,
+                                    role = userController.getUserRole(currentSession),
+                                    buttonValue = 'Change Picture',
+                                    onclickAction = 'uploadPicture()',
+                                    buttonLength = "w-50",
+                                    buttonId = "uploadPictureButton")
+    except FileNotFoundError:
+        return render_template('profile/profile.html',
+                        id = 0,
+                        role = userController.getUserRole(currentSession),
+                        buttonValue = 'Upload Picture',
+                        onclickAction = 'onclick = "uploadPicture()"',
+                        buttonLength = "w-50",
+                        buttonId = "uploadPictureButton")
 
 
 @app.route('/create-new-game', methods = ['GET','POST'])

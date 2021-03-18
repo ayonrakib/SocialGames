@@ -427,3 +427,15 @@ class UserController():
             return False
         except peewee.DoesNotExist:
             return False
+
+
+    # isProfilePicturePresent
+    # input: id
+    # return: true if present, false if not
+    # method:
+    #   1. request file id diye
+    #   2. jodi read korte pari:
+    #       1. return true
+    #   3. return false
+    def isProfilePicturePresent(self, id):
+        profilePicture = ""
