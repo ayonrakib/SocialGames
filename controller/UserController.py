@@ -429,6 +429,22 @@ class UserController():
             return False
 
 
+    # modifyProfile
+    # input: currentSession, email, pass
+    # return: true if modified, false if not
+    # method:
+    #   1. currentSession diye current user khuje ber korbo
+    #   2. current user er new email = email set korbo db te
+    #   3. current user er new password = password set korbo db te
+    #   4. return true
+    def modifyProfile(self, currentSession, password, firstName, lastName):
+        user = User.get(User.currentSession == currentSession)
+        salt = user.salt
+        user.password = self.hashPassword(password, salt)
+        user.firstName = firstName
+        user.lastName = lastName
+        user.save()
+
     # isProfilePicturePresent
     # input: id
     # return: true if present, false if not

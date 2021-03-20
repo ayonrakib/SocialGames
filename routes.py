@@ -269,7 +269,7 @@ def profile():
                         id = 0,
                         role = userController.getUserRole(currentSession),
                         buttonValue = 'Upload Picture',
-                        onclickAction = 'onclick = "uploadPicture()"',
+                        onclickAction = "uploadPicture()",
                         buttonLength = "w-50",
                         buttonId = "uploadPictureButton")
 
@@ -283,8 +283,21 @@ def createGame():
         response.append(request.args.get('gameCode'))
         response.append(request.args.get('numberOfPlayers'))
         response.append(request.args.get('gameIcon'))
-        
         return f"{response}"
+
+
+@app.route('/modify-profile')
+def modifyProfile():
+    password = request.args.get('password')
+    firstName = request.args.get('firstName')
+    lastName = request.args.get('lastName')
+    userController.modifyProfile(request.cookies.get('currentSession'), password, firstName, lastName)
+    return ""
+
+@app.route('/get-email')
+def getEmail():
+    user = User.get(User.currentSession == request.cookies.get('currentSession'))
+    return user.email
 
 
 @app.route('/logout')

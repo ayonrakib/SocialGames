@@ -10,11 +10,12 @@ from playhouse.migrate import *
 databaseConnection = DatabaseConnection.getConnection()
 userController = UserController()
 user = User()
+
 # userController.findUsersWithEmail('ayo')
 
 # jokhon table banabo, create_tables function er input hobe list of Class objects
 # databaseConnection.create_tables([User, Friends, GameTable, MatchTable])
-databaseConnection.create_tables([GameTable])
+# databaseConnection.create_tables([GameTable])
 # salt = str(os.urandom(20))
 # currentSession = str(os.urandom(20))
 
