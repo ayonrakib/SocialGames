@@ -7,11 +7,12 @@
                 <img src='/images/profilePicture/{{id}}.png' alt="" width="200" height="200">
             </div>
             <div class="row">
-                <form action="upload-picture" target="_parent">
-                    {% include 'user/button.html' %}
-                    <input id="file-input" type="file" name="name" style="display: none;" />
-                </form>
-                
+                <div class="col-md-12">
+                    <form action="upload-picture" target="_self" method="POST" enctype="multipart/form-data">
+                        {% include 'user/button.html' %}
+                        <input id="file-input" type="file" name="name" style="display: none;" />
+                    </form>
+                </div>
             </div>
         </div>
         <div class="col-md-8">

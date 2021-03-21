@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, make_response, redirect, url_for, jsonify
+from flask import Flask, render_template, request, make_response, redirect, url_for, jsonify, flash
+from werkzeug.utils import secure_filename
 import mysql.connector as mysql
 import hashlib, binascii, peewee
 from library.DatabaseConnection import DatabaseConnection
@@ -12,6 +13,9 @@ import os, peewee
 
 
 app = Flask("Social Games", template_folder="templates", static_folder="", static_url_path="/")
+app.config['UPLOAD-FOLDER'] = 'D:/SocialGames/images/profilePicture'
+app.secret_key = "super secret key"
+ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
 userController = UserController()
 
 # naming convention sobkhane projojjo. eikhane ami likhsi loginForm, but eita form na, pura page. so naam thik korte hobe
@@ -293,6 +297,37 @@ def modifyProfile():
     lastName = request.args.get('lastName')
     userController.modifyProfile(request.cookies.get('currentSession'), password, firstName, lastName)
     return ""
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+@app.route('/upload-picture', methods = ['POST','GET'])
+def uploadPicture():
+    if request.method == 'POST':
+        print("came inside upload pic function")
+        f = request.files['file']
+        f.save(secure_filename(f.filename))
+        return 'file uploaded successfully'
+
+
+@app.route('/api/login', methods = ['POST','GET'])
+def apiLogin():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        if userController.authenticateUser(email, password):
+            response = make_response(redirect(url_for(homePage)))
+            currentSession = str(os.urandom(20))
+            user = User.get(User.email == email)
+            user.currentSession = currentSession
+            response.set_cookie('email',email)
+            response.set_cookie('currentSession',currentSession)
+            return """{
+                        'data': 
+            }"""
+
 
 @app.route('/get-email')
 def getEmail():

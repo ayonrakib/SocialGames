@@ -2,7 +2,13 @@ $(document).ready(function(){
     $('#uploadPictureButton').on('click', function(event) {
         event.preventDefault();
         $('#file-input').trigger('click');
-
+        $.ajax({
+            method:'POST',
+            url:'upload-picture',
+            data:{}
+        }).done(function(response){
+            console.log(response);
+        })
     });
     $.ajax({
         method:'GET',
