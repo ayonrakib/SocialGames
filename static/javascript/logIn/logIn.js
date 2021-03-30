@@ -17,5 +17,23 @@ $(document).ready(function(){
         }).done(function(response){
             console.log(response);
         })
+        // authenticate method after clicking apiLogin Sign in button
+        // input: none
+        // return: none
+        // method:
+        //      1. inputEmail id er value nibo
+        //      2. inputPassword id er value nibo
+        //      3. ajax method
+        //          1. method: POST
+        //          2. url: api-authenticate
+        //          3. data:
+        //              1. email: email
+        //              2. password: password
+        //          4. return paile:
+        //              1. method input: response
+        //                  1. log korbo response
+        $("#apiLoginSubmitButton").click(function(){
+            var email = $("#inputEmail")
+        })
     })
 })

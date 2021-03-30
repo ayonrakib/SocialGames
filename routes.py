@@ -312,27 +312,90 @@ def uploadPicture():
         return 'file uploaded successfully'
 
 
-@app.route('/api/login', methods = ['POST','GET'])
+# /api/login
+# 1. input: none
+# 2. return: authenticated session and empty error string as dict if authenticated, empty string and customized error message as dict if failed to authenticate
+# 3. method:
+#   1. jodi request method POST hoy:
+#       1. form theke email nibo
+#       2. form theke password nibo
+#       3. jodi userController er authenticateUser method er return value true hoy:
+#           1. currentSession banabo
+#           2. db theke user read korbo email diye
+#           3. user er currentSession e save korbo currentSession
+#           4. return korbo
+#               {
+#                   'data': currentSession,
+#                   'error': null}
+#   2. return korbo
+#       {
+#           'data': "",
+#           'error': {
+#                       'errorCode' : 'INVALID_CREDENTIALS' -> individual error code for individual error
+#                       'errorMessage' : 'The credentials you provided are wrong. Please try again'
+#                   }
+
+
+@app.route('/api/login', methods = ['POST'])
 def apiLogin():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password')
         if userController.authenticateUser(email, password):
-            response = make_response(redirect(url_for(homePage)))
             currentSession = str(os.urandom(20))
             user = User.get(User.email == email)
             user.currentSession = currentSession
-            response.set_cookie('email',email)
-            response.set_cookie('currentSession',currentSession)
-            return """{
-                        'data': 
-            }"""
+            return (
+                    f"{{"
+                        f"'data': {currentSession},"
+                        f"'error': ''"
+                    f"}}"
+                    )
+    # return  """{
+    #        'data': "",
+    #        'error': {
+    #                    'errorCode' : 'INVALID_CREDENTIALS',
+    #                    'errorMessage' : 'The credentials you provided are wrong. Please try again'
+    #                 }
+    # }"""
+    return "wrong"
+
+
+@app.route('/login-page')
+def apiLoginPage():
+    currentSession = request.cookies.get('currentSession')
+    if currentSession is None:
+        return render_template('user/page-login.html',
+                                action = "api/authenticate",
+                                pageHeader = "Sign In",
+                                errorMessage = "",
+                                buttonValue = "Sign In",
+                                buttonLength = "",
+                                buttonId = "apiLoginSubmitButton")
+    return redirect(url_for(homePage))
+
+
+@app.route('/api/authenticate', methods = ["POST","GET"])
+def apiAuthenticate():
+    if request.method == "POST":
+        email = request.form["email"]
+        password = request.form["password"]
+        if userController.authenticateUser(email, password):
+            currentSession = str(os.urandom(20))
+            response = make_response()
+            response.set_cookie('currentSession', currentSession)
+            user = User.get(User.email == email)
+            user.currentSession = currentSession
 
 
 @app.route('/get-email')
 def getEmail():
-    user = User.get(User.currentSession == request.cookies.get('currentSession'))
-    return user.email
+    try:
+        user = User.get(User.currentSession == request.cookies.get('currentSession'))
+        print(user)
+        return user.email
+    except peewee.DoesNotExist:
+        return ""
 
 
 @app.route('/logout')
