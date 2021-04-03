@@ -38,6 +38,22 @@ class UserController():
         except:
             return False
 
+    # validateCurrentSession
+    # input: currentSession
+    # return: true if validated, false if not
+    # method:
+    #   1. read korar try korbo currentSession diye
+    #   2. jodi User khuje na pai:
+    #       1. return false
+    #   3. return true
+    def validateCurrentSession(self, currentSession):
+        try:
+            user = User.get(User.currentSession == currentSession)
+            return True
+        except peewee.DoesNotExist:
+            return False
+        
+        
 # user jei data pathay sob string, so email str kina check dorkar nai.
     def findUserByEmail(self, email):
         # if not isinstance(email, str):
@@ -80,7 +96,7 @@ class UserController():
     def createUserFromRegistrationForm(self, email, password, firstName, lastName):
         salt = str(os.urandom(20))
         currentSession = str(os.urandom(20))
-        user = User.create(email = email, firstName = firstName, lastName = lastName, password = self.hashPassword(password, salt), salt = salt, currentSession = currentSession)
+        user = User.create(email = email, firstName = firstName, lastName = lastName, password = self.hashPassword(password, salt), salt = salt, currentSession = currentSession, role = "player")
         return user
 
 

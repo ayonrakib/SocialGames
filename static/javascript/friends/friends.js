@@ -55,11 +55,11 @@ $(document).ready(function(){
             url: 'get-my-friends',
             data: {}
         }).done(function(response){
-            // console.log(response);
+            console.log(response);
             var friendNumber = 1;
             var friendsBlock = rowBlockHeader(friendNumber) + columnHeader(3) + imageBlock() + columnFooter();
             var friends = "";
-            if (eval(response).length >=1){
+            if ((eval(response)).length >=1){
                 for(var index = 0; index < eval(response).length; index++, friendNumber++){
                         friends += friendsBlock   + columnHeader(3) + eval(response)[index]["name"] + columnFooter() 
                                 + columnHeader(3) + button(`${eval(response)[index]["id"]}`,"remove","Remove", `${eval(response)[index]["id"]}`) 

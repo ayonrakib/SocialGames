@@ -51,7 +51,7 @@ def home():
 @app.route('/login')
 def logIn():
     currentSession = request.cookies.get('currentSession')
-    if currentSession is None:
+    if currentSession is None or userController.validateCurrentSession(currentSession) is False:
         return render_template('user/page-login.html',
                                 action = "authenticate", 
                                 pageHeader = "Sign In",
@@ -59,8 +59,9 @@ def logIn():
                                 buttonValue = "Sign In",
                                 buttonLength = "",
                                 buttonId = "loginSubmitButton")
-    response = redirect(url_for('homePage'))
-    return response
+    if userController.validateCurrentSession(currentSession):
+        response = redirect(url_for('homePage'))
+        return response
 
 
 @app.route('/user-registration')
@@ -69,7 +70,8 @@ def userRegistration():
                             action = "validate-registration", 
                             pageHeader = "Register", 
                             userFound = "",
-                            buttonValue = "Register")
+                            buttonValue = "Register",
+                            buttonId = "registerUser")
 
 
 @app.route('/validate-registration', methods = ['POST','GET'])
@@ -77,24 +79,24 @@ def registrationSuccessful():
     if request.method == 'POST':
         currentSession = request.cookies.get('currentSession')
         if currentSession is None:
-            return redirect(url_for('logIn'))
-        email = request.form['email']
-        password = request.form['password']
-        firstName = request.form['firstName']
-        lastName = request.form['lastName']
-        foundUser = userController.findUserByEmail(email)
-        if foundUser == "User found":
-            return render_template('user/user-registration.html',
-                                    action = "validate-registration", 
-                                    pageHeader = "Register", 
-                                    userFound = "User Found",
-                                    buttonValue = "Register")
-        elif foundUser == "User Not found":
-            userController.createUserFromRegistrationForm(email, password, firstName, lastName)
-            return render_template('user/new-user-created.html',
-                                    action="home-page",
-                                    pageHeader="Click to Play game",
-                                    buttonValue="Play Game")
+            # return redirect(url_for('logIn'))
+            email = request.form['email']
+            password = request.form['password']
+            firstName = request.form['firstName']
+            lastName = request.form['lastName']
+            foundUser = userController.findUserByEmail(email)
+            if foundUser == "User found":
+                return render_template('user/user-registration.html',
+                                        action = "validate-registration", 
+                                        pageHeader = "Register", 
+                                        userFound = "User Found",
+                                        buttonValue = "Register")
+            elif foundUser == "User Not found":
+                userController.createUserFromRegistrationForm(email, password, firstName, lastName)
+                return render_template('user/homePage.html',
+                                        action="home-page",
+                                        pageHeader="Click to Play game",
+                                        buttonValue="Play Game")
 
 
 def setCurrentSession(currentSession, email):
@@ -363,29 +365,32 @@ def apiLogin():
 
 @app.route('/login-page')
 def apiLoginPage():
-    currentSession = request.cookies.get('currentSession')
-    if currentSession is None:
-        return render_template('user/page-login.html',
-                                action = "api/authenticate",
-                                pageHeader = "Sign In",
-                                errorMessage = "",
-                                buttonValue = "Sign In",
-                                buttonLength = "",
-                                buttonId = "apiLoginSubmitButton")
-    return redirect(url_for(homePage))
+    return render_template('user/page-login.html',
+                            action = "api/authenticate",
+                            pageHeader = "Sign In",
+                            errorMessage = "",
+                            buttonValue = "Sign In",
+                            buttonLength = "",
+                            buttonId = "apiLoginSubmitButton")
 
 
 @app.route('/api/authenticate', methods = ["POST","GET"])
 def apiAuthenticate():
     if request.method == "POST":
-        email = request.form["email"]
-        password = request.form["password"]
-        if userController.authenticateUser(email, password):
-            currentSession = str(os.urandom(20))
-            response = make_response()
-            response.set_cookie('currentSession', currentSession)
-            user = User.get(User.email == email)
-            user.currentSession = currentSession
+        currentSession = request.form.get('currentSession')
+        if currentSession == "" or userController.validateCurrentSession(currentSession) is False:
+            return (
+                f"{{"
+                    f'"data": false,'
+                    f'"error": ""'
+                f"}}"
+            )
+        return (
+            f"{{"
+                    f'"data": true,'
+                    f'"error": ""'
+            f"}}"
+        )
 
 
 @app.route('/get-email')
