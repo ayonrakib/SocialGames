@@ -1,4 +1,10 @@
 $(document).ready(function(){
+    var currentSessionCookie = getCurrentSession();
+    console.log("The current session cookie is: ", currentSessionCookie);
+    if (currentSessionCookie != ""){
+        console.log("now authenticate");
+        validateSessionId(currentSessionCookie);
+    }
     // 1. loginSubmitButton button e click korle function
     // 2. input none
     // 3. return: none
@@ -8,9 +14,7 @@ $(document).ready(function(){
     //          2. headers: {"Authorization": "Basic abcd"}
     //      2. response paile:
     //          1. console e log korbo response
-    var currentSessionCookie = getCurrentSession();
-    console.log("The current session cookie is: ", currentSessionCookie);
-    authenticate(currentSessionCookie);
+
     $("#loginSubmitButton").click(function(){
         // console.log("Clicked on login button");
         $.ajax({
@@ -21,7 +25,7 @@ $(document).ready(function(){
             console.log(response);
         })
     })
-            // authenticate method after clicking apiLogin Sign in button
+        // authenticate method after clicking apiLogin Sign in button
         // input: event
         // return: none
         // method:
@@ -37,6 +41,12 @@ $(document).ready(function(){
         //          4. return paile:
         //              1. method input: response
         //                  1. log korbo response
+        //                  2. jodi response data true hoy:
+        //                      1. current page er location /home-page banabo
+        //                  3. othoba:
+        //                      1. response er error key er errorMessage key er value log
+        //                      2. errorMessage id wala element er html e errorMEssage bohabo
+        //                      3. errorMessage id wala element er css change korbo: style hobe inline block
         $("#apiLoginSubmitButton").click(function(event){
             event.preventDefault();
             var email = $("#inputEmail").val();
@@ -49,7 +59,20 @@ $(document).ready(function(){
                     'password': password
                 }
             }).done(function(response){
+                response = JSON.parse(response);
                 console.log(response);
+                if (response["data"] != ""){
+                    // $(location).attr('href','/home-page');
+                    console.log(response["data"]);
+                    document.cookie = `currentSession = ${response["data"]};path = /`;
+                    $(location).attr('href','/home-page');
+                }
+                else{
+                    console.log(response["error"]);
+                    console.log(response["error"]["errorMessage"]);
+                    $("#errorMessage").html(response["error"]["errorMessage"]);
+                    $("#errorMessage").css("display","inline-block");
+                }
             })
         })
         // method: getCurrentSession
@@ -71,16 +94,17 @@ $(document).ready(function(){
                 return "";
             }
             console.log("The cookie is: ",cookie);
-            var decodedCookie = decodeURIComponent(cookie);
-            var decodedCurrentSession = decodedCookie.split(";");
+            var decodedCookie = decodeURI(cookie);
+            console.log("The decoded cookie is: ", decodedCookie);
+            var decodedCurrentSession =  decodedCookie.split(";");
             console.log("The decodedCurrentSession string is: ", decodedCurrentSession[1]);
             var index = decodedCurrentSession[1].search("=");
-            var currentSessionCookie = decodedCurrentSession[1].slice(index+2,-1);
-            console.log("The current Session is: ", currentSessionCookie);
+            var currentSessionCookie = decodedCurrentSession[1].slice(index+1);
+            console.log("The unescaped current Session is: ", currentSessionCookie);
             return currentSessionCookie;
         }
 
-        // authenticate
+        // validateSessionId
         // input: currentSession
         // return: true if authenticated, false if not
         // method:
@@ -90,13 +114,14 @@ $(document).ready(function(){
         //          3. url: /api/authenticate
         //      2. return value response:
         //          1. response ke object e convert korbo
-        //          2. jodi response object er data true hoy:
-        //              1. return true
-        //          3. return false
-        function authenticate(currentSessionCookie){
+        //          2. jodi response object er data false hoy:
+        //              1. document er cookie expire kore dibo
+        //          3. noile:
+        //              1. current url ke redirect kore home-page korbo
+        function validateSessionId(currentSessionCookie){
             $.ajax({
                 method: 'POST',
-                url: '/api/authenticate',
+                url: '/api/validate-cookie',
                 data:{
                     currentSession : currentSessionCookie
                 }
@@ -106,6 +131,11 @@ $(document).ready(function(){
                 console.log(responseObject);
                 console.log("The type of responseObject is: ", typeof responseObject);
                 console.log("data is: ",responseObject["data"]);
+                if (responseObject["data"] == false) {
+                    document.cookie = " expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+                } else {
+                    $(location).attr('href','/home-page');
+                }
             })
         }
 })

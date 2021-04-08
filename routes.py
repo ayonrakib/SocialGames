@@ -5,6 +5,7 @@ import hashlib, binascii, peewee
 from library.DatabaseConnection import DatabaseConnection
 from model.User import User
 from controller.UserController import UserController
+from base64 import b64encode
 import os, peewee
 # import logging
 # logger = logging.getLogger('peewee')
@@ -116,7 +117,8 @@ def authenticate():
         password = request.form['password']
         if userController.authenticateUser(email, password):
             response = make_response(redirect(url_for('homePage')))
-            currentSession = str(os.urandom(20))
+            currentSession = b64encode(os.urandom(20)).decode('utf-8')
+            print("The generated session id is: ", currentSession)
             response.set_cookie('email',email)
             response.set_cookie('currentSession',currentSession)
             setCurrentSession(currentSession, email)
@@ -134,6 +136,7 @@ def homePage():
     currentSession = request.cookies.get('currentSession')
     if currentSession is None:
             return redirect(url_for('logIn'))
+    # print("The cookie from the browser is: ",request.cookies.get('currentSession'))
     return render_template('commons/home-page.html',
                             role = userController.getUserRole(currentSession))
 
@@ -364,6 +367,11 @@ def apiLogin():
 
 
 @app.route('/login-page')
+# apiLoginPage
+# input: nothing
+# return: nothing
+# method:
+#   1. 
 def apiLoginPage():
     return render_template('user/page-login.html',
                             action = "api/authenticate",
@@ -377,8 +385,37 @@ def apiLoginPage():
 @app.route('/api/authenticate', methods = ["POST","GET"])
 def apiAuthenticate():
     if request.method == "POST":
+        email = request.form.get('email')
+        password = request.form.get('password')
+        # print(email, password)
+        if userController.authenticateUser(email, password):
+            currentSession = b64encode(os.urandom(20)).decode('utf-8')
+            print("The str of currentsession is: ",str(currentSession))
+            # print("str of 20 is: ",str(20))
+            print("type of currentsession is: ",type(currentSession))
+            return (
+                        f"{{"
+                            f'"data": "{currentSession}",'
+                            f'"error": ""'
+                        f"}}"
+                    )
+        return (
+                    f"{{"
+                        f'"data": "",'
+                        f'"error":' 
+                                f'{{'
+                                    f'"errorCode": "INVALID_CREDRENTIALS",'
+                                    f'"errorMessage": "Please insert right credentials!"'
+                                f'}}'
+                    f"}}"
+                )
+
+
+@app.route('/api/validate-cookie', methods = ['POST'])
+def validateCookie():
+    if request.method == 'POST':
         currentSession = request.form.get('currentSession')
-        if currentSession == "" or userController.validateCurrentSession(currentSession) is False:
+        if userController.validateCurrentSession(currentSession) is False:
             return (
                 f"{{"
                     f'"data": false,'
@@ -391,6 +428,14 @@ def apiAuthenticate():
                     f'"error": ""'
             f"}}"
         )
+
+
+@app.route('/api/forward', methods = ['POST'])
+def forward():
+    if request.method == 'POST':
+        if request.form.get('directTo') == 'login':
+            return redirect(url_for('logIn'))
+        return redirect(url_for('homePage'))
 
 
 @app.route('/get-email')
@@ -407,7 +452,7 @@ def getEmail():
 def logOut():
     email = request.cookies.get('email')
     setCurrentSession("", email)
-    response = make_response(redirect(url_for('logIn')))
+    response = make_response(redirect(url_for('apiLoginPage')))
     response.set_cookie('email', expires=0)
     response.set_cookie('currentSession', expires=0)
     return response

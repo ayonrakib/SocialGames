@@ -52,3 +52,7 @@ a:hover{
   display: block;
   margin-bottom: 10px;
 }
+#errorMessage{
+  display: none;
+  color: red;
+}

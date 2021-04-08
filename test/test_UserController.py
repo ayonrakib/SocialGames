@@ -2,6 +2,7 @@ import unittest
 from controller.UserController import UserController
 from model.Friend import Friend
 from model.User import User
+import peewee
 
 
 class test_UserController(unittest.TestCase):
@@ -25,3 +26,12 @@ class test_UserController(unittest.TestCase):
         userController = UserController()
         isUserAdmin = userController.isMyRoleAdmin("b''n0\xfa\xdd\xceHT\xce\xaf\xbe\xee\xcc\xff\x9e\x10\xc5x|\xb2\xed''")
         print(isUserAdmin)
+
+    
+    def test_validateCurrentSession(self):
+        try:
+            user = User.get(User.currentSession == 'b''G\xea\xda\xee\xf6\xf4\xfbJ\xb0n\r}\xba\x05+6\xc5\xb8U\xfb''')
+            print("user is",user.id)
+            return True
+        except peewee.DoesNotExist:
+            return False

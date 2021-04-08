@@ -4,6 +4,7 @@
 {% include 'user/pageHeader.html' %}
 {% if  'Failed to login!' in errorMessage %}
     {% include 'user/authenticateUserError.html' %}
+    {% include 'user/errorMessage.html' %}
     {% include 'user/emailBlock.html' %}
     {% include 'user/passwordBlock.html' %}
     {% include 'user/button.html' %}
@@ -12,6 +13,7 @@
     {% include 'commons/pageFooter.html' %}
     <script src="/static/javascript/logIn/logIn.js"></script>
 {% elif '' in errorMessage %}
+    {% include 'user/errorMessage.html' %}
     {% include 'user/emailBlock.html' %}
     {% include 'user/passwordBlock.html' %}
     {% include 'user/button.html' %}

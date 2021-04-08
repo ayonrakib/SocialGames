@@ -49,6 +49,7 @@ class UserController():
     def validateCurrentSession(self, currentSession):
         try:
             user = User.get(User.currentSession == currentSession)
+            print("user id is",user.id)
             return True
         except peewee.DoesNotExist:
             return False
