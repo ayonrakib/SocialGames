@@ -9,7 +9,7 @@ class User(peewee.Model):
     lastName = peewee.CharField()
     currentSession = peewee.CharField()
     salt = peewee.CharField()
-    role = peewee.CharField()
+    role = peewee.CharField(default='player',null=False)
     class Meta:
         database = DatabaseConnection.getConnection()
 

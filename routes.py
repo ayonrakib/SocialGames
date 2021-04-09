@@ -46,7 +46,7 @@ userController = UserController()
 @app.route('/')
 def home():
     # landing page
-    return redirect(url_for('logIn'))
+    return redirect(url_for('apiLoginPage'))
 
 
 @app.route('/login')
@@ -134,11 +134,12 @@ def authenticate():
 @app.route('/home-page')
 def homePage():
     currentSession = request.cookies.get('currentSession')
+    userRole = userController.getUserRole(currentSession)
+    print(currentSession)
     if currentSession is None:
-            return redirect(url_for('logIn'))
-    # print("The cookie from the browser is: ",request.cookies.get('currentSession'))
+            return redirect(url_for('apiLoginPage'))
     return render_template('commons/home-page.html',
-                            role = userController.getUserRole(currentSession))
+                            role = userRole)
 
 
 @app.route('/friends', methods = ['GET'])
@@ -390,9 +391,7 @@ def apiAuthenticate():
         # print(email, password)
         if userController.authenticateUser(email, password):
             currentSession = b64encode(os.urandom(20)).decode('utf-8')
-            print("The str of currentsession is: ",str(currentSession))
-            # print("str of 20 is: ",str(20))
-            print("type of currentsession is: ",type(currentSession))
+            setCurrentSession(currentSession, email)
             return (
                         f"{{"
                             f'"data": "{currentSession}",'
@@ -430,6 +429,14 @@ def validateCookie():
         )
 
 
+@app.route('/api/set-cookie-in-database', methods = ['POST'])
+def setCookieInDatabase():
+    if request.method == 'POST':
+        currentSession = request.form.get('currentSession')
+        print("cookie is: ",currentSession)
+        return "Set cookie in db"
+
+
 @app.route('/api/forward', methods = ['POST'])
 def forward():
     if request.method == 'POST':
@@ -450,18 +457,25 @@ def getEmail():
 
 @app.route('/logout')
 def logOut():
-    email = request.cookies.get('email')
-    setCurrentSession("", email)
-    response = make_response(redirect(url_for('apiLoginPage')))
-    response.set_cookie('email', expires=0)
-    response.set_cookie('currentSession', expires=0)
-    return response
+    currentSession = request.cookies.get('currentSession')
+    if userController.logOut(currentSession):
+        response = make_response(redirect(url_for('apiLoginPage')))
+        response.set_cookie('email', expires=0)
+        response.set_cookie('currentSession', expires=0)
+        response.set_cookie('expires', expires=0)
+        return response
 
 
 @app.route('/get-request-header')
 def getRequestHeader():
     authorizationToken = request.headers.get('Authorization')
     return authorizationToken
+
+
+@app.route('/game-form')
+def gameForm():
+    return render_template('')
+
 
 
 if __name__ == "__main__":

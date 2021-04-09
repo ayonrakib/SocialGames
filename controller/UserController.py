@@ -38,6 +38,26 @@ class UserController():
         except:
             return False
 
+
+    # logOut
+    # input: current session
+    # return: true if logged out, false if could not
+    # method:
+    #   1. current session diye user read korar try korbo
+    #   2. jodi user khuje nai pai:
+    #       1. return false
+    #   3. user er current session empty string
+    #   4. return true
+    def logOut(self, currentSession):
+        try:
+            user = User.get(User.currentSession == currentSession)
+            user.currentSession = ""
+            user.save()
+            return True
+        except peewee.DoesNotExist:
+            return False
+
+
     # validateCurrentSession
     # input: currentSession
     # return: true if validated, false if not
@@ -49,7 +69,6 @@ class UserController():
     def validateCurrentSession(self, currentSession):
         try:
             user = User.get(User.currentSession == currentSession)
-            print("user id is",user.id)
             return True
         except peewee.DoesNotExist:
             return False
@@ -89,6 +108,7 @@ class UserController():
     def getUserRole(self, currentSession):
         try:
             user = User.get(User.currentSession == currentSession)
+            print("User role is",user.role)
             return user.role
         except peewee.DoesNotExist:
             return None

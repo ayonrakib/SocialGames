@@ -62,7 +62,6 @@ $(document).ready(function(){
                 response = JSON.parse(response);
                 console.log(response);
                 if (response["data"] != ""){
-                    // $(location).attr('href','/home-page');
                     console.log(response["data"]);
                     document.cookie = `currentSession = ${response["data"]};path = /`;
                     $(location).attr('href','/home-page');
@@ -97,9 +96,10 @@ $(document).ready(function(){
             var decodedCookie = decodeURI(cookie);
             console.log("The decoded cookie is: ", decodedCookie);
             var decodedCurrentSession =  decodedCookie.split(";");
-            console.log("The decodedCurrentSession string is: ", decodedCurrentSession[1]);
-            var index = decodedCurrentSession[1].search("=");
-            var currentSessionCookie = decodedCurrentSession[1].slice(index+1);
+            console.log("The decodedCurrentSession string is: ", decodedCurrentSession);
+            var index = decodedCurrentSession[0].search("=");
+            console.log("The index of the position is: ", index);
+            var currentSessionCookie = decodedCurrentSession[0].slice(index+1);
             console.log("The unescaped current Session is: ", currentSessionCookie);
             return currentSessionCookie;
         }
