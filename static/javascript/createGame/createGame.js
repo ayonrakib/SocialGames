@@ -1,10 +1,10 @@
 function selectGameBlock(){
     // console.log("creategame js is loaded");
 
-    gameForm = getContainer() + "<form id = 'createGameForm'>" + getRowHeader() + getColumnHeader() + "Game Title: " + getDivEnding() + getColumnHeader() + getInputText("gameTitle","Game Title") + getDivEnding() + getDivEnding()
+    gameForm = getContainer() + "<form id = 'createGameForm' action = '/api/create-game'>" + getRowHeader() + getColumnHeader() + "Game Title: " + getDivEnding() + getColumnHeader() + getInputText("gameTitle","Game Title") + getDivEnding() + getDivEnding()
              + getRowHeader() + getColumnHeader() + "Game Code: " + getDivEnding() + getColumnHeader() + getInputText("gameCode","Game Code") + getDivEnding() + getDivEnding()
              + getRowHeader() + getColumnHeader() + "Number of Players: " + getDivEnding() + getColumnHeader() + getInputText("numberOfPlayers","Number of Players") + getDivEnding() + getDivEnding()
-             + getRowHeader() + getColumnHeader() + "Game Icon: " + getDivEnding() + getColumnHeader() + `<input type="file" id="gameIcon">` + getDivEnding() + getDivEnding()
+             + getRowHeader() + getColumnHeader() + "Game Icon: " + getDivEnding() + getColumnHeader() + `<input type="file" id="gameIcon" name = "file">` + getDivEnding() + getDivEnding()
              + getRowHeader() + getColumnHeader() + getDivEnding() + getColumnHeader() + getButton() + getDivEnding() + "</form>"  + getDivEnding() + getDivEnding();
     $("#gameBlock").html(gameForm);
     
@@ -36,40 +36,48 @@ function selectGameBlock(){
         $( "#createGameForm" ).submit(function( event ) {
             event.preventDefault();
             console.log("form submit button has been clicked");
-            var gameFormData = $( this ).serializeArray();
-            // console.log(gameFormData);
-            var gameIconName = $('#gameIcon').prop('files')[0]["name"];
-            console.log(gameIconName);
-            var gameTitle = gameFormData[0]['value'];
-            var gameCode = gameFormData[1]['value'];
-            var numberOfPlayers = gameFormData[2]['value'];
-            console.log(gameTitle); 
-            console.log(gameCode);
-            console.log(numberOfPlayers);
-            if((gameIconName != undefined) && (gameTitle != undefined) && (gameCode != undefined)&& (numberOfPlayers != undefined)){
-                $.ajax({
-                    method: 'POST',
-                    url: 'api/create-game',
-                    data: {
-                        'gameTitle': gameTitle,
-                        'gameCode' : gameCode,
-                        'numberOfPlayers' : numberOfPlayers,
-                        'gameIcon' : gameIcon
-                    }
-                }).done(function(response){
-                    console.log(response);
-                })
-            }
+            var formData = new FormData(this);
+            console.log(formData);
+            $.ajax({
+                url: window.location.pathname,
+                type: 'POST',
+                data: formData,
+                success: function (data) {
+                    alert(data)
+                },
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+            // var gameFormData = $( this ).serializeArray();
+            // // console.log(gameFormData);
+            // var gameIconName = $('#gameIcon').prop('files')[0]["name"];
+            // console.log(gameIconName);
+            // var gameTitle = gameFormData[0]['value'];
+            // var gameCode = gameFormData[1]['value'];
+            // var numberOfPlayers = gameFormData[2]['value'];
+            // console.log(gameTitle); 
+            // console.log(gameCode);
+            // console.log(numberOfPlayers);
+            // if((gameIconName != undefined) && (gameTitle != undefined) && (gameCode != undefined) && (numberOfPlayers != undefined)){
+            //     $.ajax({
+            //         method: 'POST',
+            //         url: 'api/create-game',
+            //         data: {
+            //             'gameTitle': gameTitle,
+            //             'gameCode' : gameCode,
+            //             'numberOfPlayers' : numberOfPlayers,
+            //             'gameIconName' : gameIconName
+            //         }
+            //     }).done(function(response){
+            //         console.log(response);
+            //     })
+            // }
 
         })
     })
     
 }
-
-// $(document).ready(function(){
-//     console.log($( "#createGameForm" ));
-// })
-
 
 
 function createGameBlock(gameName){

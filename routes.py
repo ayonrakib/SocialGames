@@ -286,16 +286,16 @@ def profile():
                         buttonId = "uploadPictureButton")
 
 
-@app.route('/create-new-game', methods = ['GET','POST'])
-def createGame():
-    if request.method == 'GET':
-        response = []
-        print(request.args.get('gameTitle'))
-        response.append(request.args.get('gameTitle'))
-        response.append(request.args.get('gameCode'))
-        response.append(request.args.get('numberOfPlayers'))
-        response.append(request.args.get('gameIcon'))
-        return f"{response}"
+# @app.route('/create-new-game', methods = ['GET','POST'])
+# def createGame():
+#     if request.method == 'GET':
+#         response = []
+#         print(request.args.get('gameTitle'))
+#         response.append(request.args.get('gameTitle'))
+#         response.append(request.args.get('gameCode'))
+#         response.append(request.args.get('numberOfPlayers'))
+#         response.append(request.args.get('gameIcon'))
+#         return f"{response}"
 
 
 @app.route('/modify-profile')
@@ -511,6 +511,31 @@ def showGameIcon(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
                                
+
+@app.route('/api/create-game', methods = ['POST'])
+def createGame():
+    if request.method == 'POST':
+        gameTitle = request.form.get('gameTitle')
+        gameCode = request.form.get('gameCode')
+        numberOfPlayers = request.form.get('numberOfPlayers')
+        print(gameTitle, gameCode, numberOfPlayers)
+        file = request.files['file']
+        print(file)
+        # if user does not select file, browser also
+        # submit an empty part without filename
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(url_for('uploadGameIcon'))
+        if file and allowed_image(file.filename):
+            filename = secure_filename(file.filename)
+            # print("file name is: ",filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return render_template('games/create-game.html',
+                                    gameTitle = gameTitle,
+                                    gameCode = gameCode,
+                                    numberOfPlayers = numberOfPlayers,
+                                    gameIcon = filename)
+
 
 if __name__ == "__main__":
     app.debug = True
