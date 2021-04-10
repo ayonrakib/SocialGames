@@ -479,7 +479,6 @@ def allowed_image(filename):
     if not "." in filename:
         return False
     fileExtension = filename.rsplit(".",1)[1]
-    print(fileExtension.lower())
     if fileExtension.lower() not in app.config['ALLOWED_EXTENSIONS']:
         return False
     return True
@@ -504,7 +503,6 @@ def saveGameIcon():
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             return redirect(url_for('showGameIcon',
                                     filename=filename))
-        print("should redirect to request url")
         return redirect(url_for('uploadGameIcon'))
 
 
