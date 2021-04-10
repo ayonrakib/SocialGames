@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, make_response, redirect, url_for, jsonify, flash
+from flask import Flask, render_template, request, make_response, redirect, url_for, jsonify, flash, send_from_directory, abort
 from werkzeug.utils import secure_filename
 import mysql.connector as mysql
 import hashlib, binascii, peewee
@@ -6,7 +6,7 @@ from library.DatabaseConnection import DatabaseConnection
 from model.User import User
 from controller.UserController import UserController
 from base64 import b64encode
-import os, peewee
+import os, peewee, imghdr
 # import logging
 # logger = logging.getLogger('peewee')
 # logger.addHandler(logging.StreamHandler())
@@ -14,9 +14,11 @@ import os, peewee
 
 
 app = Flask("Social Games", template_folder="templates", static_folder="", static_url_path="/")
-app.config['UPLOAD-FOLDER'] = 'D:/SocialGames/images/profilePicture'
+UPLOAD_FOLDER = 'D:/SocialGames/images/profilePicture'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['UPLOAD_PATH'] = 'D:/SocialGames/images/profilePicture'
 app.secret_key = "super secret key"
-ALLOWED_EXTENSIONS = {'txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'}
+app.config['ALLOWED_EXTENSIONS'] = ['jpg', 'png', 'gif', 'jpeg']
 userController = UserController()
 
 # naming convention sobkhane projojjo. eikhane ami likhsi loginForm, but eita form na, pura page. so naam thik korte hobe
@@ -304,10 +306,6 @@ def modifyProfile():
     userController.modifyProfile(request.cookies.get('currentSession'), password, firstName, lastName)
     return ""
 
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
 
 @app.route('/upload-picture', methods = ['POST','GET'])
 def uploadPicture():
@@ -472,11 +470,49 @@ def getRequestHeader():
     return authorizationToken
 
 
-@app.route('/game-form')
-def gameForm():
-    return render_template('')
+@app.route('/upload-game-icon')
+def uploadGameIcon():
+    return render_template('games/upload-game-icon.html')
 
 
+def allowed_image(filename):
+    if not "." in filename:
+        return False
+    fileExtension = filename.rsplit(".",1)[1]
+    print(fileExtension.lower())
+    if fileExtension.lower() not in app.config['ALLOWED_EXTENSIONS']:
+        return False
+    return True
+    
+
+@app.route('/save-game-icon', methods = ['POST'])
+def saveGameIcon():
+    if request.method == 'POST':
+        # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit an empty part without filename
+        if file.filename == '':
+            flash('No selected file')
+            return redirect(url_for('uploadGameIcon'))
+        if file and allowed_image(file.filename):
+            filename = secure_filename(file.filename)
+            print("file name is: ",filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            return redirect(url_for('showGameIcon',
+                                    filename=filename))
+        print("should redirect to request url")
+        return redirect(url_for('uploadGameIcon'))
+
+
+@app.route('/show-game-icon/<filename>')
+def showGameIcon(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'],
+                               filename)
+                               
 
 if __name__ == "__main__":
     app.debug = True
