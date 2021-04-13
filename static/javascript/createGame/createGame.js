@@ -2,7 +2,7 @@ function selectGameBlock(){
     // console.log("creategame js is loaded");
 
     gameForm = getContainer() + "<form id = 'createGameForm' action = '/api/create-game'>" + getRowHeader() + getColumnHeader() + "Game Title: " + getDivEnding() + getColumnHeader() + getInputText("gameTitle","Game Title") + getDivEnding() + getDivEnding()
-             + getRowHeader() + getColumnHeader() + "Game Code: " + getDivEnding() + getColumnHeader() + getInputText("gameCode","Game Code") + getDivEnding() + getDivEnding()
+             + getRowHeader() + getColumnHeader() + "Game Path: " + getDivEnding() + getColumnHeader() + getInputText("gamePath","Game Path") + getDivEnding() + getDivEnding()
              + getRowHeader() + getColumnHeader() + "Number of Players: " + getDivEnding() + getColumnHeader() + getInputText("numberOfPlayers","Number of Players") + getDivEnding() + getDivEnding()
              + getRowHeader() + getColumnHeader() + "Game Icon: " + getDivEnding() + getColumnHeader() + `<input type="file" id="gameIcon" name = "file">` + getDivEnding() + getDivEnding()
              + getRowHeader() + getColumnHeader() + getDivEnding() + getColumnHeader() + getButton() + getDivEnding() + "</form>"  + getDivEnding() + getDivEnding();
@@ -41,14 +41,15 @@ function selectGameBlock(){
             if (formData.get('gameTitle') == ""){
                 errorMessage += " insert valid game title ";
             }
-            if(formData.get('gameCode') == ""){
-                errorMessage += " insert valid game code ";
+            if(formData.get('gamePath') == ""){
+                errorMessage += " insert valid game path ";
             }
             if(formData.get('numberOfPlayers') == ""){
                 errorMessage += " insert valid number of players ";
             }
-            if((formData.get('gameTitle') == "") || (formData.get('gameCode') == "") || (formData.get('numberOfPlayers') == "")){
+            if((formData.get('gameTitle') == "") || (formData.get('gamePath') == "") || (formData.get('numberOfPlayers') == "")){
                 $('#modalBody').html(errorMessage);
+                $('#modalTitle').html('Invalid Input');
                 $("#invalidFileModal").modal('show');
             }
             
@@ -61,9 +62,13 @@ function selectGameBlock(){
                     if (response['error']['errorCode'] == 'INVALID_FILE') {
                         errorMessage += " attach correct image.";
                         $('#modalBody').html(errorMessage);
+                        $('#modalTitle').html('Invalid Input');
                         $("#invalidFileModal").modal('show');
                     } else {
                         console.log(response);
+                        $('#modalBody').html("Game Successfully created!");
+                        $('#modalTitle').html('Success!');
+                        $("#invalidFileModal").modal('show');
                     }
                 },
                 cache: false,

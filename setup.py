@@ -10,7 +10,7 @@ from playhouse.migrate import *
 databaseConnection = DatabaseConnection.getConnection()
 userController = UserController()
 user = User()
-
+# databaseConnection.drop_tables([GameTable])
 # userController.findUsersWithEmail('ayo')
 
 # jokhon table banabo, create_tables function er input hobe list of Class objects
@@ -40,12 +40,13 @@ user = User()
 # database = MySQLDatabase("socialgames",host = "localhost", user = "root", password = "Hahaha01670", port = 3306)
 # migrator = MySQLMigrator(database)
 
+# gamePath = CharField(default="")
 # migrate(
-#     migrator.add_column('Friends','isBlocked', isBlocked)
+#     migrator.add_column('GameTable','gamePath', gamePath)
 # )
 
 # migrate(
-#     migrator.drop_column('User','isBlocked')
+#     migrator.drop_column('GameTable','gameCode')
 # )
 
 # status = Friend.get(Friend.user_id == 1 and Friend.friend_id == 55)

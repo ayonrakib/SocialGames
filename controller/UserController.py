@@ -108,7 +108,7 @@ class UserController():
     def getUserRole(self, currentSession):
         try:
             user = User.get(User.currentSession == currentSession)
-            print("User role is",user.role)
+            # print("User role is",user.role)
             return user.role
         except peewee.DoesNotExist:
             return None
@@ -490,5 +490,5 @@ class UserController():
     #   2. jodi read korte pari:
     #       1. return true
     #   3. return false
-    def isProfilePicturePresent(self, id):
-        profilePicture = ""
+    # def isProfilePicturePresent(self, id):
+    #     profilePicture = ""

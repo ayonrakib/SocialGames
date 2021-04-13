@@ -5,6 +5,7 @@ import hashlib, binascii, peewee
 from library.DatabaseConnection import DatabaseConnection
 from model.User import User
 from controller.UserController import UserController
+from controller.GameController import GameController
 from base64 import b64encode
 import os, peewee, imghdr
 # import logging
@@ -20,6 +21,7 @@ app.config['UPLOAD_PATH'] = 'D:/SocialGames/images/profilePicture'
 app.secret_key = "super secret key"
 app.config['ALLOWED_EXTENSIONS'] = ['jpg', 'png', 'gif', 'jpeg']
 userController = UserController()
+gameController = GameController()
 
 # naming convention sobkhane projojjo. eikhane ami likhsi loginForm, but eita form na, pura page. so naam thik korte hobe
 # input validation sob backend e thakbe, frontend eo.
@@ -516,11 +518,11 @@ def showGameIcon(filename):
 def createGame():
     if request.method == 'POST':
         gameTitle = request.form.get('gameTitle')
-        gameCode = request.form.get('gameCode')
         numberOfPlayers = request.form.get('numberOfPlayers')
-        print(gameTitle, gameCode, numberOfPlayers)
+        gamePath = request.form.get('gamePath')
+        print(gameTitle, numberOfPlayers,gamePath)
         file = request.files['file']
-        print(file)
+        # print(file)
         # if user does not select file, browser also
         # submit an empty part without filename
         userId = userController.getUserWithSessionId(request.cookies.get('currentSession'))
@@ -538,15 +540,29 @@ def createGame():
                 f"}}"
             )
         if file and allowed_image(file.filename):
-            # filename = secure_filename(file.filename)
+            filename = secure_filename(file.filename)
+            fileExtensionIndex = filename.find(".")
+            fileExtension = filename[fileExtensionIndex:]
+            # print("file extension is: ",fileExtension)
             # print("file name is: ",filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], str(userId)))
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], str(userId)+fileExtension))
+            if gameController.createGame(gameTitle,str(userId)+fileExtension,gamePath,int(numberOfPlayers)):
+                return (
+                        f"{{"
+                            f'"data": true,'
+                            f'"error": ""'
+                        f"}}"
+                        )
             return (
-                f"{{"
-                    f'"data": true,'
-                    f'"error": ""'
-                f"}}"
-            )
+                    f"{{"
+                        f'"data": false,'
+                        f'"error": '
+                            f'{{'
+                                f'"errorCode" : "FAILED_TO_CREATE_GAME"'
+                                f'"errorMessage" : "Failed to create new game"'
+                            f'}}'
+                    f"}}"
+                    )
 
 
 if __name__ == "__main__":
