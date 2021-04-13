@@ -288,18 +288,6 @@ def profile():
                         buttonId = "uploadPictureButton")
 
 
-# @app.route('/create-new-game', methods = ['GET','POST'])
-# def createGame():
-#     if request.method == 'GET':
-#         response = []
-#         print(request.args.get('gameTitle'))
-#         response.append(request.args.get('gameTitle'))
-#         response.append(request.args.get('gameCode'))
-#         response.append(request.args.get('numberOfPlayers'))
-#         response.append(request.args.get('gameIcon'))
-#         return f"{response}"
-
-
 @app.route('/modify-profile')
 def modifyProfile():
     password = request.args.get('password')
@@ -558,11 +546,31 @@ def createGame():
                         f'"data": false,'
                         f'"error": '
                             f'{{'
-                                f'"errorCode" : "FAILED_TO_CREATE_GAME"'
+                                f'"errorCode" : "FAILED_TO_CREATE_GAME",'
                                 f'"errorMessage" : "Failed to create new game"'
                             f'}}'
                     f"}}"
                     )
+
+
+@app.route('/games')
+def gamesPage():
+    return render_template('games/show-game.html')
+
+
+@app.route('/api/show-games', methods = ['POST'])
+def showGames():
+    if request.method == 'POST':
+        return (
+                f"{{"
+                    f'"data": false,'
+                    f'"error": '
+                        f'{{'
+                            f'"errorCode" : "FAILED_TO_CREATE_GAME",'
+                            f'"errorMessage" : "Failed to create new game"'
+                        f"}}"
+                f"}}"
+                )
 
 
 if __name__ == "__main__":
