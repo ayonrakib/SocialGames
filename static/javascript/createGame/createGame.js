@@ -35,15 +35,36 @@ function selectGameBlock(){
     $(document).ready(function(){
         $( "#createGameForm" ).submit(function( event ) {
             event.preventDefault();
-            console.log("form submit button has been clicked");
             var formData = new FormData(this);
-            console.log(formData);
+            // console.log(formData);
+            var errorMessage = "Please";
+            if (formData.get('gameTitle') == ""){
+                errorMessage += " insert valid game title ";
+            }
+            if(formData.get('gameCode') == ""){
+                errorMessage += " insert valid game code ";
+            }
+            if(formData.get('numberOfPlayers') == ""){
+                errorMessage += " insert valid number of players ";
+            }
+            if((formData.get('gameTitle') == "") || (formData.get('gameCode') == "") || (formData.get('numberOfPlayers') == "")){
+                $('#modalBody').html(errorMessage);
+                $("#invalidFileModal").modal('show');
+            }
+            
             $.ajax({
-                url: window.location.pathname,
+                url: 'api/create-game',
                 type: 'POST',
                 data: formData,
-                success: function (data) {
-                    alert(data)
+                success: function (response) {
+                    response = JSON.parse(response);
+                    if (response['error']['errorCode'] == 'INVALID_FILE') {
+                        errorMessage += " attach correct image.";
+                        $('#modalBody').html(errorMessage);
+                        $("#invalidFileModal").modal('show');
+                    } else {
+                        console.log(response);
+                    }
                 },
                 cache: false,
                 contentType: false,

@@ -447,7 +447,7 @@ def forward():
 def getEmail():
     try:
         user = User.get(User.currentSession == request.cookies.get('currentSession'))
-        print(user)
+        # print(user)
         return user.email
     except peewee.DoesNotExist:
         return ""
@@ -496,14 +496,14 @@ def saveGameIcon():
         # submit an empty part without filename
         if file.filename == '':
             flash('No selected file')
-            return redirect(url_for('uploadGameIcon'))
+            return redirect(url_for('adminPanel'))
         if file and allowed_image(file.filename):
             filename = secure_filename(file.filename)
             print("file name is: ",filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
             return redirect(url_for('showGameIcon',
                                     filename=filename))
-        return redirect(url_for('uploadGameIcon'))
+        return redirect(url_for('adminPanel'))
 
 
 @app.route('/show-game-icon/<filename>')
@@ -523,18 +523,30 @@ def createGame():
         print(file)
         # if user does not select file, browser also
         # submit an empty part without filename
-        if file.filename == '':
+        userId = userController.getUserWithSessionId(request.cookies.get('currentSession'))
+        # print(userId)
+        if file.filename == '' or allowed_image(file.filename) is False:
             flash('No selected file')
-            return redirect(url_for('uploadGameIcon'))
+            return (
+                f"{{"
+                    f'"data": false,'
+                    f'"error": '
+                        f'{{'
+                            f'"errorCode": "INVALID_FILE",'
+                            f'"errorMessage": "Please select a valid image."'
+                        f'}}'
+                f"}}"
+            )
         if file and allowed_image(file.filename):
-            filename = secure_filename(file.filename)
+            # filename = secure_filename(file.filename)
             # print("file name is: ",filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return render_template('games/create-game.html',
-                                    gameTitle = gameTitle,
-                                    gameCode = gameCode,
-                                    numberOfPlayers = numberOfPlayers,
-                                    gameIcon = filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], str(userId)))
+            return (
+                f"{{"
+                    f'"data": true,'
+                    f'"error": ""'
+                f"}}"
+            )
 
 
 if __name__ == "__main__":
