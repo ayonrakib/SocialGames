@@ -1,6 +1,7 @@
 from library.DatabaseConnection import DatabaseConnection
 from model.User import User
 from controller.UserController import UserController
+from controller.GameController import GameController
 from model.Friend import Friend
 from model.GameTable import GameTable
 from model.MatchTable import MatchTable
@@ -15,7 +16,7 @@ user = User()
 
 # jokhon table banabo, create_tables function er input hobe list of Class objects
 # databaseConnection.create_tables([User, Friends, GameTable, MatchTable])
-# databaseConnection.create_tables([GameTable])
+databaseConnection.create_tables([GameTable])
 # salt = str(os.urandom(20))
 # currentSession = str(os.urandom(20))
 

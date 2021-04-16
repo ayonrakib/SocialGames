@@ -14,3 +14,10 @@ class test_GameController(unittest.TestCase):
     def test_createGame(self):
         gameController = GameController()
         print(gameController.createGame('twenty-nine','1.png','twenty-nine',4))
+
+
+    def test_searchGames(self):
+        gameController = GameController()
+        games = gameController.searchGames()
+        for game in games:
+            print(game)

@@ -24,3 +24,12 @@ class GameController():
             return True
         except peewee.IntegrityError:
             return False
+
+
+    # showGames
+    # input: none
+    # return: game details
+    # method:
+    #   1. return korbo db er sob entry dict akare
+    def searchGames(self):
+        return GameTable.select().dicts()

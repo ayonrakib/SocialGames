@@ -7,7 +7,7 @@ from model.User import User
 from controller.UserController import UserController
 from controller.GameController import GameController
 from base64 import b64encode
-import os, peewee, imghdr
+import os, peewee, imghdr, json
 # import logging
 # logger = logging.getLogger('peewee')
 # logger.addHandler(logging.StreamHandler())
@@ -555,20 +555,45 @@ def createGame():
 
 @app.route('/games')
 def gamesPage():
-    return render_template('games/show-game.html')
+    currentSession = request.cookies.get('currentSession')
+    return render_template('games/show-game.html',
+                            role = userController.getUserRole(currentSession))
 
-
+# showGames
+# input: bnone
+# return: false if no games, games if existing
+# method:
+#   1. jodi request method post hoy:
+#       1. game table er sob entry read korbo
+#       2. jodi entry na thake:
+#           1. return korbo JSON false hishebe, error message pathabo
+#       3. return korbo JSON with data as db er sob entry object akare
 @app.route('/api/show-games', methods = ['POST'])
 def showGames():
     if request.method == 'POST':
+        games = gameController.searchGames()
+        if len(games) == 0:
+            return (
+                    f"{{"
+                        f'"data": false,'
+                        f'"error": '
+                            f'{{'
+                                f'"errorCode" : "NO_GAMES",'
+                                f'"errorMessage" : "No games to show"'
+                            f"}}"
+                    f"}}"
+                    )
+        allGames = []
+        for game in games:
+            allGames.append(game)
+        # print(allGames)
+        allGamesInJson = json.dumps(allGames)
+        print("all games in json is: ", allGamesInJson)
+        print("type of all games in json is: ",type(allGamesInJson))
         return (
                 f"{{"
-                    f'"data": false,'
-                    f'"error": '
-                        f'{{'
-                            f'"errorCode" : "FAILED_TO_CREATE_GAME",'
-                            f'"errorMessage" : "Failed to create new game"'
-                        f"}}"
+                    f'"data": {allGamesInJson},'
+                    f'"error": ""'
                 f"}}"
                 )
 
