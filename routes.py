@@ -598,6 +598,12 @@ def showGames():
                 )
 
 
+@app.route('/view-game')
+def viewGame():
+    return render_template('match/match.html',
+                            role = userController.getUserRole(request.cookies.get('currentSession')))
+
+
 if __name__ == "__main__":
     app.debug = True
     app.run()

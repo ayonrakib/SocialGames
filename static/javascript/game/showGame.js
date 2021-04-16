@@ -19,6 +19,9 @@
 //                          1. game title e title, icon e pic, path e url, number of players e number of players boshabo
 //                          2. notun row create korbo
 //                  5. gameBlock e ei pura data gula html akare boshabo
+//                  6. button e click korle:
+//                      1. button er id read korbo
+//                      2.  
 $(document).ready(function(){
     // setInterval(showGame,10000);
     // function showGame(){
@@ -34,43 +37,28 @@ $(document).ready(function(){
                 console.log(response['error']);
             }
             else{
-                var gameData = getRowHeader();
+                var gameData = "";
                 for(var index = 0; index < response['data'].length; index++){
                     // console.log(key, response['data'][index][key]);
                     var imageHTML = `<img src="images/profilePicture/${response['data'][index]['gameIcon']}">`;
                     console.log("image html is:",imageHTML);
-                    gameData += getColumnHeader('gameTitleBlock') + response['data'][index]['gameTitle'] + getDivEnding()
-                               +getColumnHeader('gameIconBlock') + $(".gameIconBlock").html(`<img src="images/profilePicture/${response['data'][index]['gameIcon']}" height="50px" width="50px">`) + getDivEnding()
+                    gameData += getRowHeader() + getColumnHeader('gameTitleBlock') + response['data'][index]['gameTitle'] + getDivEnding()
+                               +getColumnHeader('gameIconBlock') + `<img src="images/profilePicture/${response['data'][index]['gameIcon']}" height="50px" width="50px">`  + getDivEnding()
                                +getColumnHeader('gamePathBlock') + response['data'][index]['gamePath'] + getDivEnding()
                                +getColumnHeader('numberOfPlayersBlock') + response['data'][index]['numberOfPlayers'] + getDivEnding() +getColumnHeader() + getButton(response['data'][index]['id']) + getDivEnding();
+                    // $(".gameIconBlock").html(`<img src="images/profilePicture/${response['data'][index]['gameIcon']}" height="50px" width="50px">`);
                 }
                 $(".gameBlock").html(gameData);
                 $(".imageBlock").html(`<img src="images/profilePicture/${response['data'][0]['gameIcon']}" height="50px" width="50px">`);
+                $("button").click(function(){
+                    var buttonId = $(this).attr('id');
+                    console.log("The button id is: ",buttonId);
+                })
             }
         });
-    // }
-        // $.ajax({
-        //     method: 'POST',
-        //     url: 'api/show-games',
-        //     data: {}
-        // }).done(function(response){
-        //     console.log(response);
-        //     response = JSON.parse(response);
-        //     if (response['data'] == false){
-        //         console.log(response['error']);
-        //     }
-        //     else{
-        //         var gameData = getRowHeader();
-        //         for(var index = 0; index < response['data'].length; index++){
-        //             // console.log(key, response['data'][index][key]);
-        //             gameData += getColumnHeader() + response['data'][index]['gameTitle'] + getDivEnding()
-        //                        +getColumnHeader() + response['data'][index]['gameIcon'] + getDivEnding()
-        //                        +getColumnHeader() + response['data'][index]['gamePath'] + getDivEnding()
-        //                        +getColumnHeader() + response['data'][index]['numberOfPlayers'] + getDivEnding() +getColumnHeader() + getButton(response['data'][index]['id']) + getDivEnding();
-        //         }
-        //         $(".gameBlock").html(gameData);
-        //     }
-        // });
+        // 1. join button e click korle
+        //      2. log hello world
+
 })
 
 function getContainer(){
@@ -90,5 +78,5 @@ function getDivEnding(){
 }
 
 function getButton(buttonId){
-    return `<button type = "button" class = "w-50 btn btn-sm btn-primary" id = ${buttonId}>Join</button>`
+    return `<button class = "w-50 btn btn-sm btn-primary" id = ${buttonId}>Play</button>`
 }
