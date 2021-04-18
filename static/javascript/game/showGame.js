@@ -30,9 +30,9 @@ $(document).ready(function(){
             url: 'api/show-games',
             data: {}
         }).done(function(response){
-            console.log(response);
+            // console.log(response);
             response = JSON.parse(response);
-            console.log("image name is: ",response['data'][0]['gameIcon']);
+            // console.log("image name is: ",response['data'][0]['gameIcon']);
             if (response['data'] == false){
                 console.log(response['error']);
             }
@@ -41,7 +41,7 @@ $(document).ready(function(){
                 for(var index = 0; index < response['data'].length; index++){
                     // console.log(key, response['data'][index][key]);
                     var imageHTML = `<img src="images/profilePicture/${response['data'][index]['gameIcon']}">`;
-                    console.log("image html is:",imageHTML);
+                    // console.log("image html is:",imageHTML);
                     gameData += getRowHeader() + getColumnHeader('gameTitleBlock') + response['data'][index]['gameTitle'] + getDivEnding()
                                +getColumnHeader('gameIconBlock') + `<img src="images/profilePicture/${response['data'][index]['gameIcon']}" height="50px" width="50px">`  + getDivEnding()
                                +getColumnHeader('gamePathBlock') + response['data'][index]['gamePath'] + getDivEnding()

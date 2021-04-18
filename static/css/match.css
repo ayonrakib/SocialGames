@@ -1,4 +1,7 @@
-#inviteFriendsButtonBlock{
+#inviteFriendsButtonBlock, #friendsBlock, #hostGameButtonBlock{
     display: flex;
     justify-content: center;
+}
+#friendsContainer{
+    display: none;
 }

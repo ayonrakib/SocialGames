@@ -1,19 +1,53 @@
 {% include 'commons/head.html' %}
 <link rel="stylesheet" href="/static/css/match.css">
 {% include 'commons/pageHeader.html' %}
-<div class="container">
+<div id="hostGameButtonBlock">
+    <button type="button" id = "hostGameButton"  class="w-40 btn btn-primary">Start New Game</button>
+</div>
+
+<div class="container" id="friendsContainer">
     <div class="row">
-        <div class="col-sm-4" id = "inviteFriendsButtonBlock">
-            <button type="button" id = "inviteFriendsButton"  class="w-50 btn btn-primary">Invite Friends</button>
+        <div class="col-sm-4" >
+            <input type="text" class="form-control" placeholder="Find Friends" name="friendName" id = "friendName">
+            
         </div>
         <div class="col-sm-4">
 
         </div>
-        <div class="col-sm-4">
-            <input type="text" class="form-control" placeholder="Find Friends" name="friendName" id = "friendName">
+        <div class="col-sm-4" id = "inviteFriendsButtonBlock">
+            <button type="button" id = "inviteFriendsButton"  class="w-50 btn btn-primary">Search Friends</button>
         </div>
     </div>
+    <div class="container" id = "showFriendsBlock">
+
+    </div>
+
 </div>
+
+<!-- Button trigger modal -->
+<button type="button" id="errorModalButton" class="btn btn-primary" data-toggle="modal" data-target="#errorModal" style="display: none;">
+    Launch demo modal
+  </button>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Invalid name</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body" id="modalBody">
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
 {% include 'commons/pageFooter.html' %}
 <script src="/static/javascript/match/match.js"></script>

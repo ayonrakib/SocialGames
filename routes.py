@@ -636,12 +636,16 @@ def getFriendsWithApi():
         currentSession = request.cookies.get('currentSession')
         friends = userController.findUsersWithEmail(friendName, currentSession)
         friends.pop(0)
-        friends = json.dumps(friends)
-        print(friends)
+        # friends = json.dumps(friends)
+        names = []
+        for friend in friends:
+            # print(friend['name'])
+            names.append(friend['name'])
+        # print(json.dumps(names))
         # return 
         return (
             f"{{"
-                f'"data": "{friends}",'
+                f'"data": {json.dumps(friends)},'
                 f'"error": ""'
             f"}}"
         )
