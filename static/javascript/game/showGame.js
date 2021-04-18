@@ -49,10 +49,11 @@ $(document).ready(function(){
                     // $(".gameIconBlock").html(`<img src="images/profilePicture/${response['data'][index]['gameIcon']}" height="50px" width="50px">`);
                 }
                 $(".gameBlock").html(gameData);
-                $(".imageBlock").html(`<img src="images/profilePicture/${response['data'][0]['gameIcon']}" height="50px" width="50px">`);
+                // $(".imageBlock").html(`<img src="images/profilePicture/${response['data'][0]['gameIcon']}" height="50px" width="50px">`);
                 $("button").click(function(){
                     var buttonId = $(this).attr('id');
                     console.log("The button id is: ",buttonId);
+                    window.location = 'view-game';
                 })
             }
         });

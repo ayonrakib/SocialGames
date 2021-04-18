@@ -1,5 +1,6 @@
 from library.DatabaseConnection import DatabaseConnection
 from model.User import User
+from model.GameTable import GameTable
 from controller.UserController import UserController
 from controller.GameController import GameController
 from model.Friend import Friend
@@ -14,9 +15,12 @@ user = User()
 # databaseConnection.drop_tables([GameTable])
 # userController.findUsersWithEmail('ayo')
 
+# game = GameTable.get(GameTable.id == 1)
+# game.gameIcon = '29.png'
+# game.save()
 # jokhon table banabo, create_tables function er input hobe list of Class objects
 # databaseConnection.create_tables([User, Friends, GameTable, MatchTable])
-databaseConnection.create_tables([GameTable])
+# databaseConnection.create_tables([GameTable])
 # salt = str(os.urandom(20))
 # currentSession = str(os.urandom(20))
 

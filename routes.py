@@ -600,8 +600,7 @@ def showGames():
 
 @app.route('/view-game')
 def viewGame():
-    return render_template('match/match.html',
-                            role = userController.getUserRole(request.cookies.get('currentSession')))
+    return render_template('match/match.html')
 
 
 if __name__ == "__main__":
