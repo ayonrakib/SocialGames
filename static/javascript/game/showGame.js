@@ -50,10 +50,21 @@ $(document).ready(function(){
                 }
                 $(".gameBlock").html(gameData);
                 // $(".imageBlock").html(`<img src="images/profilePicture/${response['data'][0]['gameIcon']}" height="50px" width="50px">`);
-                $("button").click(function(){
+                $("button").on('click', function(){
                     var buttonId = $(this).attr('id');
                     console.log("The button id is: ",buttonId);
-                    window.location = 'view-game';
+                    $.ajax({
+                        method: 'POST',
+                        url: 'api/get-game-url',
+                        data:{
+                            id: `${buttonId}`
+                        }
+                    }).done(function(response){
+                        response = JSON.parse(response);
+                        // console.log(response['data']);
+                        window.location = `${response['data']}`;
+                    })
+                    
                 })
             }
         });

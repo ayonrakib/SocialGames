@@ -513,7 +513,7 @@ def createGame():
         # print(file)
         # if user does not select file, browser also
         # submit an empty part without filename
-        userId = userController.getUserWithSessionId(request.cookies.get('currentSession'))
+        # userId = userController.getUserWithSessionId(request.cookies.get('currentSession'))
         # print(userId)
         if file.filename == '' or allowed_image(file.filename) is False:
             flash('No selected file')
@@ -533,8 +533,8 @@ def createGame():
             fileExtension = filename[fileExtensionIndex:]
             # print("file extension is: ",fileExtension)
             # print("file name is: ",filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], str(userId)+fileExtension))
-            if gameController.createGame(gameTitle,str(userId)+fileExtension,gamePath,int(numberOfPlayers)):
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], gameTitle+fileExtension))
+            if gameController.createGame(gameTitle,gameTitle+fileExtension,gamePath,int(numberOfPlayers)):
                 return (
                         f"{{"
                             f'"data": true,'
@@ -558,6 +558,7 @@ def gamesPage():
     currentSession = request.cookies.get('currentSession')
     return render_template('games/show-game.html',
                             role = userController.getUserRole(currentSession))
+
 
 # showGames
 # input: bnone
@@ -598,7 +599,55 @@ def showGames():
                 )
 
 
-@app.route('/view-game')
+@app.route('/api/get-game-url', methods = ['POST'])
+def getGameUrl():
+    if request.method == 'POST':
+        gameId = request.form.get('id')
+        gamePath = gameController.getGameUrl(gameId)
+        if gamePath != "":
+            return (
+                f"{{"
+                    f'"data": "{gamePath}",'
+                    f'"error":""'
+                f"}}"
+            )
+        return (
+            f"{{"
+                f'"data": "",'
+                f'"error":'
+                    f"{{"
+                        f'"errorCode": "INVALID_GAME_URL",'
+                        f'"errorMessage": "The game url is invalid"'
+                    f"}}"
+            f"}}"
+        )
+
+@app.route('/api/get-friends', methods = ['POST'])
+# get friends with api
+# input: none
+# return: api akare friends list if existing, otherwise false and error
+# method:
+#   1. friend name read korbo
+#   2. cookie read korbo
+#   3. 
+def getFriendsWithApi():
+    if request.method == 'POST':
+        friendName = request.form.get('friendName')
+        currentSession = request.cookies.get('currentSession')
+        friends = userController.findUsersWithEmail(friendName, currentSession)
+        friends.pop(0)
+        friends = json.dumps(friends)
+        print(friends)
+        # return 
+        return (
+            f"{{"
+                f'"data": "{friends}",'
+                f'"error": ""'
+            f"}}"
+        )
+
+
+@app.route('/view-29-games')
 def viewGame():
     return render_template('match/match.html')
 

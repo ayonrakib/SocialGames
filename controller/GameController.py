@@ -33,3 +33,14 @@ class GameController():
     #   1. return korbo db er sob entry dict akare
     def searchGames(self):
         return GameTable.select().dicts()
+
+
+    # getGameUrl
+    # input: game id
+    # return: game url
+    # method:
+    #   1. game id diye entry read korbo
+    #   2. return korbo entry er game path
+    def getGameUrl(self, gameId):
+        currentGame = GameTable.get(GameTable.id == gameId)
+        return currentGame.gamePath

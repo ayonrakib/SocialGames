@@ -1,5 +1,19 @@
 {% include 'commons/head.html' %}
+<link rel="stylesheet" href="/static/css/match.css">
 {% include 'commons/pageHeader.html' %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4" id = "inviteFriendsButtonBlock">
+            <button type="button" id = "inviteFriendsButton"  class="w-50 btn btn-primary">Invite Friends</button>
+        </div>
+        <div class="col-sm-4">
+
+        </div>
+        <div class="col-sm-4">
+            <input type="text" class="form-control" placeholder="Find Friends" name="friendName" id = "friendName">
+        </div>
+    </div>
+</div>
 
 {% include 'commons/pageFooter.html' %}
 <script src="/static/javascript/match/match.js"></script>
