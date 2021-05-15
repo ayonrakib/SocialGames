@@ -298,7 +298,7 @@ class UserController():
                 userNameAndId["name"] = name
                 userNameAndId["status"] = user.status
                 friendsRequested.append(userNameAndId)
-        return friendsRequested 
+        return friendsRequested
 
 
 # getMyFriends
